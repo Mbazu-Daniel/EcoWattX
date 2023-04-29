@@ -5,9 +5,8 @@ import solar from "../../public/solar.svg"
 
  const Hero = () => {
     return (
-      <div className="hero-banner relative bg-cover bg-center">
-        {/* <div className="absolute inset-0 bg-black/75"></div> */}
-        <div className="pt-24 pb-20"  style={{ backgroundImage: "url('/solar.svg')" }}>
+      <div className="hero-banner relative bg-cover bg-center overflow-x-hidden">
+        <div className="pt-24 pb-20"  style={{ backgroundImage: "url('/bg.png')" }}>
           <div className="w-11/12 lg:w-11/12 mx-auto">
               <div className="flex gap-5 flex-col lg:flex-row">
                   <div className="w-full lg:w-3/3 space-y-10 text-center">

@@ -2,7 +2,7 @@ import React from 'react';
 
 const About = () => {
   return (
-    <div>
+    <div className='overflow-x-hidden'>
         <h3 className="text-center mb-10 text-4xl mt-24">About us</h3>
 
         <div className="bg-[#F5FFF6]">

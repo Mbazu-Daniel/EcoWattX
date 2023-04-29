@@ -2,8 +2,8 @@ import React from 'react';
 
 const WhyUs = () => {
   return (
-    <div>
-        <div className="w-10/12 mx-auto pt-10 pb-32" id="why_us">
+    <div className="overflow-x-hidden">
+        <div className="w-10/12 mx-auto pt-10" id="why_us">
             <h3 className="text-center mb-10 text-4xl mt-24">Why us?</h3>
             <div className="flex flex-col lg:flex-row gap-20 items-center mb-24">
                 <div className="w-full lg:w-3/5 space-y-6">
