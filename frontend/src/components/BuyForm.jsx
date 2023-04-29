@@ -1,59 +1,57 @@
-import { useState } from "react";
+import React from 'react';
 
-export default function BuyForm() {
-    const [openTab, setOpenTab] = useState(1);
+const BuyForm = () => {
+  return (
+    <div className='border-none'>
+      <div className="mb-2">
+        <label htmlFor="merchant" className="block mb-2 text-sm font-medium  text-[#333333] ">
+        Who do you want to buy your energy from?
+        </label>
+        <select id="merchant" className="block w-[400px] p-2  border border-gray-300 rounded-lg bg-gray-50 sm:text-sm focus:ring-blue-500 focus:border-blue-500  dark:placeholder-gray-400 text-[#333333]  dark:focus:ring-blue-500 dark:focus:border-blue-500">
+          <option value="option-1">EEDC</option>
+          <option value="option-2">AEDC</option>
+        </select>
+      </div>
+      <div className="mb-2">
+        <label htmlFor="dropdown-2" className="block mb-2 text-sm font-medium  text-[#333333] ">
+        What type of energy do you want to buy?
+        </label>
+        <select id="dropdown-2" className="block w-full p-2  border border-gray-300 rounded-lg bg-gray-50 sm:text-sm focus:ring-blue-500 focus:border-blue-500  dark:placeholder-gray-400 text-[#333333]  dark:focus:ring-blue-500 dark:focus:border-blue-500">
+          <option value="option-1">Renewable </option>
+          <option value="option-2">Non-Renewable</option>
+        </select>
+      </div>
+      <div className="mb-2">
+        <label htmlFor="large-input" className="block mb-2 text-sm font-medium  text-[#333333] placeholder-[#333333]" >
+        How much worth of energy do you want to to purchase?
+        </label>
+        <input
+          type="text"
+          id="large-input"
+          className="bg-gray-50 border border-gray-300  text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5   dark:placeholder-gray-400 text-[#333333]  dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="Enter amount here"
+        />
+      </div>
+      <div className="mb-2">
+        <label htmlFor="base-input" className="block mb-2 text-sm font-medium  text-red placeholder-[#333333] " >
+        What is your meter number?
+        </label>
+        <input
+          type="text"
+          id="base-input"
+          className="bg-gray-50 border border-gray-300  text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5   dark:placeholder-gray-400 text-[#333333]  dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="Enter meter number"
+        />
+      </div>
 
-    return (
-        <div>
-            <div className="container mx-auto mt-12">
-                <div className="flex flex-col items-center justify-center max-w-xl">
-                    <ul className="flex space-x-2">
-                        <li>
-                            <a
-                                href="#"
-                                onClick={() => setOpenTab(1)}
-                                className={` ${openTab === 1 ? "bg-purple-600 text-white" : ""} inline-block px-4 py-2 text-gray-600 bg-white rounded shadow`}
-                            >
-                                React Tabs 1
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                                href="#"
-                                onClick={() => setOpenTab(2)}
-                                className={` ${openTab === 2 ? "bg-purple-600 text-white" : ""} inline-block px-4 py-2 text-gray-600 bg-white rounded shadow`}
+      <div className="mb-2">
+        <button
+          className="bg-[#4CAF50] border border-gray-300  text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5   dark:placeholder-gray-400 text-white  dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        > Pay </button>
+      </div>
+    
+    </div>
+  );
+};
 
-
-                            >
-                                React Tabs 2
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                                href="#"
-                                onClick={() => setOpenTab(3)}
-                                className={` ${openTab === 3 ? "bg-purple-600 text-white" : ""} inline-block px-4 py-2 text-gray-600 bg-white rounded shadow`}
-
-
-                            >
-                                React Tabs 3
-                            </a>
-                        </li>
-                    </ul>
-                    <div className="p-3 mt-6 bg-white border">
-                        <div className={openTab === 1 ? "block" : "hidden"}>
-                            {" "}
-                            React JS with Tailwind CSS Tab 1 Content show
-                        </div>
-                        <div className={openTab === 2 ? "block" : "hidden"}>
-                            React JS with Tailwind CSS Tab 2 Content show
-                        </div>
-                        <div className={openTab === 3 ? "block" : "hidden"}>
-                            React JS with Tailwind CSS Tab 3 Content show
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-}
+export default BuyForm;
