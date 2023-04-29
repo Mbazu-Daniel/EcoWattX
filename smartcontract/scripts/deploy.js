@@ -11,18 +11,18 @@ async function main() {
 
   // print the contract address
   console.log("EcoWattXToken  deployed to: ", ecoWattXToken.address);
-  await sleep(10000);
+
   // Calling the contracts
   const EcoWattXEscrow = await ethers.getContractFactory("EcoWattXEscrow");
 
   // Deploy the contract
-  const ecoWattXEscrow = await EcoWattXEscrow.deploy("ecoWattXToken.address");
+  const ecoWattXEscrow = await EcoWattXEscrow.deploy(ecoWattXToken.address);
 
   await ecoWattXEscrow.deployed();
 
   // print the contract address
   console.log("EcoWattXEscrow  deployed to: ", ecoWattXEscrow.address);
-  await sleep(10000);
+
   // Staking contract address
   // Calling the contracts
   const EcoWattXStake = await ethers.getContractFactory("EcoWattXStake");
@@ -34,8 +34,27 @@ async function main() {
 
   // print the contract address
   console.log("EcoWattXStake  deployed to: ", ecoWattXStake.address);
+
+  console.log("Sleeping.....");
   // Wait for polygonscan to notice that the contract has been deployed
   await sleep(10000);
+
+  // Verify the EcoWattXEscrow   contract after deploying
+  await hre.run("verify:verify", {
+    contract: "contracts/EcoWattX.sol:EcoWattXEscrow",
+    address: ecoWattXEscrow.address,
+    constructorArguments: [ecoWattXToken.address],
+  });
+  await hre.run("verify:verify", {
+    contract: "contracts/EcoWattXToken.sol:EcoWattX",
+    address: ecoWattXToken.address,
+    constructorArguments: [],
+  });
+  await hre.run("verify:verify", {
+    contract: "contracts/EcoWattXStaking.sol:EcoWattXStake",
+    address: ecoWattXStake.address,
+    constructorArguments: [],
+  });
 }
 
 function sleep(ms) {
