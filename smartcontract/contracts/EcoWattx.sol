@@ -1,16 +1,18 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
 import "./EcoWattXLib.sol";
+import "./EcoWattXToken.sol";
 
-contract EcoWattXEscrow{
-   using EcoWattXLib for EcoWattXLib.AccountDetails;
-   using EcoWattXLib for EcoWattXLib.TransactionInfo;
-   using EcoWattXLib for EcoWattXLib.Merchant;
+contract EcoWattXEscrow {
+  using EcoWattXLib for EcoWattXLib.AccountDetails;
+  using EcoWattXLib for EcoWattXLib.TransactionInfo;
+  using EcoWattXLib for EcoWattXLib.Merchant;
 
  
-   mapping(address => EcoWattXLib.AccountDetails) public account;
-   mapping(address => EcoWattXLib.Merchant) public merchantsMemo;
-   mapping(address => EcoWattXLib.TransactionInfo) public transactions;
+  mapping(address => EcoWattXLib.AccountDetails) public account;
+  mapping(address => EcoWattXLib.Merchant) public merchantsMemo;
+  mapping(address => EcoWattXLib.TransactionInfo) public transactions;
+  mapping(address => uint256) public rewardBalance;
 
   uint public totalTransactions;
 
@@ -58,7 +60,13 @@ contract EcoWattXEscrow{
     merchantsMemo[providerName].totalUnits -= units;
     account[msg.sender].wattsAmount += units;
 
+    //Calculate the amount of EWX to reward the user
+    uint reward = amountToPay / 200; // Reward 2% of the purchase amount in EWX tokens
 
+    // Mint new EWX tokens and transfer them to the buyer
+    _mint(msg.sender, reward);
+
+    rewardBalance[msg.sender] += reward;
     
     // Transfer funds to the merchant
     payable(msg.sender).transfer(amountToPay);
@@ -67,13 +75,27 @@ contract EcoWattXEscrow{
     emit UnitPurchased(msg.sender, units, amountToPay, providerName, meterNumber);
   }
 
-   function getAllaccount() external view returns (EcoWattXLib.AccountDetails memory) {
-     return account[msg.sender];
+  function getAllaccount() external view returns (EcoWattXLib.AccountDetails memory) {
+    return account[msg.sender];
   }
 
-   function getAllmerchantsMemo() external view returns (EcoWattXLib.Merchant memory) {
+  function getAllmerchantsMemo() external view returns (EcoWattXLib.Merchant memory) {
     return merchantsMemo[msg.sender];
   }
-}
 
+  function getAllTransactions() public view returns (EcoWattXLib.TransactionInfo[] memory) {
+    EcoWattXLib.TransactionInfo[] memory allTransactions = new EcoWattXLib.TransactionInfo[](totalTransactions);
+    uint currentIndex = 0;
+    for (uint i = 0; i < totalTransactions; i++) {
+     if (transactions[address(this)].customerId != address(0)) {
+      allTransactions[currentIndex] = transactions[address(this)];
+     }
+    }
+  }
+
+  function getSingleTransaction(uint index) public view returns (EcoWattXLib.TransactionInfo memory) {
+  require(index < totalTransactions, "Invalid transaction index");
+  return transactions[address(this)];
+
+}
 
