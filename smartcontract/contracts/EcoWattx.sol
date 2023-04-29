@@ -3,6 +3,7 @@ pragma solidity ^0.8.9;
 import "./EcoWattXLib.sol";
 import "./EcoWattXToken.sol";
 
+
 contract EcoWattXEscrow {
   using EcoWattXLib for EcoWattXLib.AccountDetails;
   using EcoWattXLib for EcoWattXLib.TransactionInfo;
@@ -11,17 +12,40 @@ contract EcoWattXEscrow {
  
   mapping(address => EcoWattXLib.AccountDetails) public account;
   mapping(address => EcoWattXLib.Merchant) public merchantsMemo;
-  mapping(address => EcoWattXLib.TransactionInfo) public transactions;
+  mapping(uint => EcoWattXLib.TransactionInfo) public transactions;
   mapping(address => uint256) public rewardBalance;
+  mapping(address => uint256) public merchantBalance;
+  mapping(address => uint[]) public users;
+  mapping(address => uint[]) public merchants;
+  mapping(address => uint256[]) public energyTransactionByAddress;
+  uint public totalTransactionId;
+  uint public accountId;
 
-  uint public totalTransactions;
 
+  event MerchantMemoRegistered(address merchantId, string merchantName, uint totalUnits, uint amountPerKWH, string sourceOfEnergy, EcoWattXLib.EnergyType energyType);
+  event UnitPurchased(address customerId, uint unitBought, uint amountPaid, address providerName, string meterNumber, EcoWattXLib.EnergyType indexed energyType);
+  event Withdraw(address userAddress, uint withdrawAmount, uint balances);
+  
+  constructor() {
+    totalTransactionId = 0;
+  }
 
-  event MerchantRegistered(address merchantId, string merchantName);
-  event UnitPurchased(address customerId, uint unitBought, uint amountPaid, address providerName, string meterNumber);
+  function accountCreation(string memory name, string memory location, EcoWattXLib.AccountRole role) external  {
+    require(msg.sender != address(0), "Empty address");
+    account[msg.sender] = EcoWattXLib.AccountDetails( msg.sender,
+      name, location, 0, role, true
+    );
 
+    if(role == EcoWattXLib.AccountRole.Merchant) {
+      users[msg.sender].push(accountId);
+    }  else {
+      merchants[msg.sender].push(accountId);
+    }
 
-  function registerMerchantMemo(string memory merchantName, uint totalUnits, uint amountPerKWH, EcoWattXLib.EnergyType energyType) public {
+    accountId++;
+    
+  }
+  function registerMerchantMemo(uint totalUnits, uint amountPerKWH,string memory sourceOfEnergy, EcoWattXLib.EnergyType energyType) public {
     // Check if the account is already registered
     require(account[msg.sender].role == EcoWattXLib.AccountRole.Merchant, "Only a merchant account can register as a merchant");
     
@@ -29,53 +53,52 @@ contract EcoWattXEscrow {
     require(merchantsMemo[msg.sender].merchantId == address(0), "Merchant is already registered");
     
     // Register the merchant
-    EcoWattXLib.Merchant memory merchant = EcoWattXLib.Merchant(msg.sender, merchantName, totalUnits, amountPerKWH, energyType);
+    string memory merchantName = account[msg.sender].accountName;
+    EcoWattXLib.Merchant memory merchant = EcoWattXLib.Merchant(msg.sender, merchantName, totalUnits, amountPerKWH, sourceOfEnergy, energyType);
     merchantsMemo[msg.sender] = merchant;
     
-    emit MerchantRegistered(msg.sender, merchantName);
+    emit MerchantMemoRegistered(msg.sender, merchantName, totalUnits, amountPerKWH, sourceOfEnergy, energyType);
   }
 
-  function purchaseUnits(uint units, address providerName, string memory meterNumber) public payable {
+  function purchaseUnits(uint amount, address providerName, string memory meterNumber, EcoWattXLib.EnergyType energyType) external payable {
+    // Check if the buyer sent enough funds
+    require(amount > 0, "Not enough funds sent for purchase");
+
     // Check if the buyer is registered
     require(account[msg.sender].role == EcoWattXLib.AccountRole.User, "Only a user account can purchase units");
     
     // Check if the merchant is registered
     require(merchantsMemo[msg.sender].merchantId != address(0), "Merchant is not registered");
+
+    // Calculate the units to recieve
+    uint units = amount / merchantsMemo[msg.sender].amountPerKWH;
     
     // Check if there are enough units available
-    require(units <= merchantsMemo[msg.sender].totalUnits, "Not enough units available for purchase");
+    require(units <= merchantsMemo[providerName].totalUnits, "Not enough units available for purchase");
     
-    // Calculate the amount to pay
-    uint amountToPay = units * merchantsMemo[msg.sender].amountPerKWH;
-    
-    // Check if the buyer sent enough funds
-    require(msg.value >= amountToPay, "Not enough funds sent for purchase");
-    
-    // Record the transaction
-    EcoWattXLib.TransactionInfo memory transaction = EcoWattXLib.TransactionInfo(msg.sender, units, amountToPay, providerName, meterNumber, merchantsMemo[msg.sender].energyType);
-    transactions[address(this)] = transaction;
-    totalTransactions++;
-    
+
     // Update the merchant's total units
     merchantsMemo[providerName].totalUnits -= units;
     account[msg.sender].wattsAmount += units;
 
+  if(energyType == EcoWattXLib.EnergyType.Renewable) {
     //Calculate the amount of EWX to reward the user
-    uint reward = amountToPay / 200; // Reward 2% of the purchase amount in EWX tokens
-
-    // Mint new EWX tokens and transfer them to the buyer
-    _mint(msg.sender, reward);
-
+    uint reward = (amount / 200) * 100; // Reward 2% of the purchase amount in EWX tokens
     rewardBalance[msg.sender] += reward;
+  }
     
-    // Transfer funds to the merchant
-    payable(msg.sender).transfer(amountToPay);
+    merchantBalance[providerName] += amount; 
    
+    // Record the transaction
+    transactions[totalTransactionId] = EcoWattXLib.TransactionInfo(msg.sender, units, amount, providerName, meterNumber, energyType);
+    energyTransactionByAddress[msg.sender].push(totalTransactionId);
+    totalTransactionId++;
     
-    emit UnitPurchased(msg.sender, units, amountToPay, providerName, meterNumber);
+    
+    emit UnitPurchased(msg.sender, units, amount, providerName, meterNumber, energyType);
   }
 
-  function getAllaccount() external view returns (EcoWattXLib.AccountDetails memory) {
+  function getUseraccount() external view returns (EcoWattXLib.AccountDetails memory) {
     return account[msg.sender];
   }
 
@@ -83,20 +106,36 @@ contract EcoWattXEscrow {
     return merchantsMemo[msg.sender];
   }
 
-  function getAllTransactions() public view returns (EcoWattXLib.TransactionInfo[] memory) {
-    EcoWattXLib.TransactionInfo[] memory allTransactions = new EcoWattXLib.TransactionInfo[](totalTransactions);
-    uint currentIndex = 0;
-    for (uint i = 0; i < totalTransactions; i++) {
-     if (transactions[address(this)].customerId != address(0)) {
-      allTransactions[currentIndex] = transactions[address(this)];
-     }
-    }
+
+  function getUserTransaction() external view returns (uint[] memory) {
+   return energyTransactionByAddress[msg.sender];
+  } 
+
+  function withdrawToken(
+    address payable receiver,
+    uint withdrawAmount
+    ) external {
+    // Check that the customer has sufficient funds
+    require(withdrawAmount <= rewardBalance[msg.sender], "Insufficient funds");
+
+    // Use SafeMath's sub function to prevent underflow
+    rewardBalance[msg.sender] = rewardBalance[msg.sender] - withdrawAmount;
+
+    // Transfer tokens from the caller to the receiver
+    require(receiver != address(0), "Invalid receiver address");
+    require(withdrawAmount > 0, "Invalid withdrawal amount");
+    require(address(this).balance >= withdrawAmount, "Not enough balance in contract");
+    receiver.transfer(withdrawAmount);
+
+    // Log event of the withdrawal made
+    emit Withdraw(msg.sender, withdrawAmount, rewardBalance[msg.sender]);
   }
 
-  function getSingleTransaction(uint index) public view returns (EcoWattXLib.TransactionInfo memory) {
-  require(index < totalTransactions, "Invalid transaction index");
-  return transactions[address(this)];
+  // Fallback and Receive function
+  receive() external payable {} // allow the contract to receive ether
+
+  fallback() external payable {} // allow the contract to receive tokens
+
 
 }
-
 
