@@ -15,7 +15,7 @@ const NavBar = () => {
             >
                 <Image src={logo} alt='EcoWattX Logo' width={56}  height={28} className="w-[56px] h-[28px] object-contain" />
                 
-              <span class="ml-2 text-xl font-bold tracking-wide text-gray-800 uppercase">
+              <span class="ml-2 text-xl font-bold tracking-wide text-gray-800">
                 EcoWattX
               </span>
             </Link>
