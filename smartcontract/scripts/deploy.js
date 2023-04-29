@@ -1,27 +1,45 @@
-// We require the Hardhat Runtime Environment explicitly here. This is optional
-// but useful for running the script in a standalone fashion through `node <script>`.
-//
-// You can also run a script with `npx hardhat run <script>`. If you do that, Hardhat
-// will compile your contracts, add the Hardhat Runtime Environment's members to the
-// global scope, and execute the script.
-const hre = require("hardhat");
+const { ethers } = require("hardhat");
 
 async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const unlockTime = currentTimestampInSeconds + 60;
+  // Calling the contracts
+  const EcoWattXToken = await ethers.getContractFactory("EcoWattX");
 
-  const lockedAmount = hre.ethers.utils.parseEther("0.001");
+  // Deploy the contract
+  const ecoWattXToken = await EcoWattXToken.deploy();
 
-  const Lock = await hre.ethers.getContractFactory("Lock");
-  const lock = await Lock.deploy(unlockTime, { value: lockedAmount });
+  await ecoWattXToken.deployed();
 
-  await lock.deployed();
+  // print the contract address
+  console.log("EcoWattXToken  deployed to: ", ecoWattXToken.address);
+  await sleep(10000);
+  // Calling the contracts
+  const EcoWattXEscrow = await ethers.getContractFactory("EcoWattXEscrow");
 
-  console.log(
-    `Lock with ${ethers.utils.formatEther(
-      lockedAmount
-    )}ETH and unlock timestamp ${unlockTime} deployed to ${lock.address}`
-  );
+  // Deploy the contract
+  const ecoWattXEscrow = await EcoWattXEscrow.deploy("ecoWattXToken.address");
+
+  await ecoWattXEscrow.deployed();
+
+  // print the contract address
+  console.log("EcoWattXEscrow  deployed to: ", ecoWattXEscrow.address);
+  await sleep(10000);
+  // Staking contract address
+  // Calling the contracts
+  const EcoWattXStake = await ethers.getContractFactory("EcoWattXStake");
+
+  // Deploy the contract
+  const ecoWattXStake = await EcoWattXStake.deploy();
+
+  await ecoWattXStake.deployed();
+
+  // print the contract address
+  console.log("EcoWattXStake  deployed to: ", ecoWattXStake.address);
+  // Wait for polygonscan to notice that the contract has been deployed
+  await sleep(10000);
+}
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 // We recommend this pattern to be able to use async/await everywhere

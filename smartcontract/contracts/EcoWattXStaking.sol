@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.0;
 
-contract Staking {
+contract EcoWattXStake {
     // stores address of the deployer of the contract
     address public owner;
 

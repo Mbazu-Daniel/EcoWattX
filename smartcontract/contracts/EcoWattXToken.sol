@@ -5,7 +5,9 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract EcoWattX is ERC20, Ownable {
-    constructor() ERC20("EcoWattX", "EWX") {}
+    constructor() ERC20("EcoWattX", "EWX") {
+        _mint(msg.sender, 10000000 * 10 ** decimals());
+    }
 
     function mint(address to, uint256 amount) public onlyOwner {
         _mint(to, amount);

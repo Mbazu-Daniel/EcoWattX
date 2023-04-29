@@ -18,6 +18,7 @@ library EcoWattXLib {
         string location;
         uint wattsAmount;
         AccountRole role;
+        bool active;
     }
 
     struct TransactionInfo {

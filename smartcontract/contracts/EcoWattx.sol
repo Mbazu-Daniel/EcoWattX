@@ -21,13 +21,17 @@ contract EcoWattXEscrow {
   uint public totalTransactionId;
   uint public accountId;
 
+  EcoWattX public ewxToken;
+
 
   event MerchantMemoRegistered(address merchantId, string merchantName, uint totalUnits, uint amountPerKWH, string sourceOfEnergy, EcoWattXLib.EnergyType energyType);
   event UnitPurchased(address customerId, uint unitBought, uint amountPaid, address providerName, string meterNumber, EcoWattXLib.EnergyType indexed energyType);
   event Withdraw(address userAddress, uint withdrawAmount, uint balances);
-  
-  constructor() {
+  event Transfer(address userAddress, address to, uint balances);
+ 
+  constructor(address tokenAddress) {
     totalTransactionId = 0;
+    ewxToken = EcoWattX(tokenAddress);
   }
 
   function accountCreation(string memory name, string memory location, EcoWattXLib.AccountRole role) external  {
@@ -110,27 +114,43 @@ contract EcoWattXEscrow {
   function getUserTransaction() external view returns (uint[] memory) {
    return energyTransactionByAddress[msg.sender];
   } 
-
-  function withdrawToken(
+function withdrawEWX(
     address payable receiver,
     uint withdrawAmount
-    ) external {
+) external {
     // Check that the customer has sufficient funds
     require(withdrawAmount <= rewardBalance[msg.sender], "Insufficient funds");
 
     // Use SafeMath's sub function to prevent underflow
     rewardBalance[msg.sender] = rewardBalance[msg.sender] - withdrawAmount;
 
-    // Transfer tokens from the caller to the receiver
+    // Transfer tokens from the contract to the receiver
     require(receiver != address(0), "Invalid receiver address");
     require(withdrawAmount > 0, "Invalid withdrawal amount");
-    require(address(this).balance >= withdrawAmount, "Not enough balance in contract");
-    receiver.transfer(withdrawAmount);
+    ewxToken.transfer(receiver, withdrawAmount);
 
     // Log event of the withdrawal made
     emit Withdraw(msg.sender, withdrawAmount, rewardBalance[msg.sender]);
-  }
+}
 
+
+   function transferEWX(
+        address to,
+        uint transferAmount
+    ) external payable returns (bool) {
+        // check that the customer has sufficient funds
+        require(rewardBalance[msg.sender] >= transferAmount, "insufficient funds");
+
+        // Use SafeMath's sub function to prevent underflow
+        rewardBalance[msg.sender] -= transferAmount;
+
+        // add transferred amount to receivers account
+        rewardBalance[to] += transferAmount;
+
+        // log event of the transfer made
+        emit Transfer(msg.sender, to, transferAmount);
+        return true;
+    }
   // Fallback and Receive function
   receive() external payable {} // allow the contract to receive ether
 
