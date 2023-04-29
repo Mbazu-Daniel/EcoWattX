@@ -34,6 +34,7 @@ library EcoWattXLib {
         string merchantName;
         uint totalUnits;
         uint amountPerKWH;
+        string sourceOfEnergy;
         EnergyType energyType;
     }
 
