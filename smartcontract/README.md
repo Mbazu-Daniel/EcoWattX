@@ -6,13 +6,9 @@ EnergyType: An enumeration for defining the type of energy as either Renewable o
 AccountDetails: A struct for storing the details of an account, including the account ID, name, location, watts amount, role, and active status.
 TransactionInfo: A struct for storing the details of a transaction, including the customer ID, unit bought, amount paid, provider name, meter number, and energy type.
 Merchant: A struct for storing the details of a merchant, including the merchant ID, name, total units, amount per KWH, source of energy, and energy type.
-To use this library, include the following line at the beginning of your Solidity file:
 
-solidity
 
-pragma solidity ^0.8.9;
-import "./EcoWattXLib.sol";
-Then, you can use any of the data structures and functions defined in the library.
+
 
 EcoWattXEscrow
 EcoWattXEscrow is a smart contract that implements an energy trading platform called EcoWattX. The contract enables users to purchase renewable energy from registered merchants and receive a reward in EcoWattX (EWX) tokens for doing so.
