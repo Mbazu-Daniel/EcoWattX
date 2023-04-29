@@ -2,7 +2,7 @@
 pragma solidity ^0.8.9;
 import "./EcoWattXLib.sol";
 
-contract EcoWattXEscrow {
+contract EcoWattXEscrow{
    using EcoWattXLib for EcoWattXLib.AccountDetails;
    using EcoWattXLib for EcoWattXLib.TransactionInfo;
    using EcoWattXLib for EcoWattXLib.Merchant;
