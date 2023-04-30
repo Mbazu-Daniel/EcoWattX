@@ -11,7 +11,7 @@ import solar from "../../public/solar.svg"
               <div className="flex gap-5 flex-col lg:flex-row">
                   <div className="w-full lg:w-3/3 space-y-10 text-center">
                     <h2 className="text-4xl lg:text-5xl font-bold font-inter">
-                      <span className="text-white mb-1">Step into the Future of Energy with EcowattX</span>
+                      <span className="text-white mb-1">Step into the Future of Energy with EcoWattX</span>
                     </h2>
 
                     <p className="text-normal font-light lg:text-xl tracking-widest text-white">

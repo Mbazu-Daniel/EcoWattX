@@ -25,3 +25,6 @@ https://ecowattx.vercel.app
 
 # Figma 
 https://www.figma.com/file/ET0tyfOfdeXp8dlqIQ7rFJ/Hackathon?type=design&node-id=0-1&t=EnYVFYOhosNZYzV1-0
+
+# Video Walkthrough
+https://drive.google.com/file/d/1eyOioV9LH4wZo0-LNHtmWJK5zN_kgkGH/view?usp=sharing

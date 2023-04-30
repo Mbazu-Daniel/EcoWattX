@@ -14,7 +14,7 @@ const Footer = () => {
                 </div>
 
                 <p className="leading-8 text-[#999999]">
-                    Join us in promoting a sustainable energy future. Contact EcowattX to learn more
+                    Join us in promoting a sustainable energy future. Contact EcoWattX to learn more
                 </p>
 
                 <div className="flex gap-6">
