@@ -19,6 +19,10 @@ module.exports = {
         'xl': '1280px',   // Extra large screens and up
         '2xl': '1536px',  // 2X extra large screens and up
       },
+      fontFamily: {
+        sans: ['Open Sans', 'ui-sans-serif', 'system-ui'],
+        'space-grotesk': ['Space Grotesk', 'sans-serif'],
+      },
     },
   },
   plugins: [],
