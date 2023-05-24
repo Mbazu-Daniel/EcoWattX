@@ -31,7 +31,7 @@ const Hero = () => {
   }, []);
 
   return (
-    <div className="hero-banner relative grid place-items-center h-[500px] bg-cover mt-3 bg-center overflow-x-hidden">
+    <div className="hero-banner relative grid place-items-center md:h-[500px] sm:h-[600px] bg-cover mt-3 bg-center overflow-x-hidden">
       {slides.map((slide, index) => (
         <div
           key={index}
