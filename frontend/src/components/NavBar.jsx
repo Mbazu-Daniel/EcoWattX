@@ -121,7 +121,7 @@ const Navbar = () => {
 
       {isMenuOpen && (
         <div className="md:hidden bg-[#4CAF50] absolute top-0 left-0 right-0 w-full z-50 font-['Space_Grotesk'] pb-12" id="mobile-menu">
-          <div className="flex justify-end mr-5 mt-6">
+          <div className="flex justify-end mr-4 mt-6">
             <button
               onClick={handleCloseMenu}
               type="button"
@@ -145,7 +145,7 @@ const Navbar = () => {
               </svg>
             </button>
           </div>
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+          <div className="px-5 pt-2 pb-3 space-y-1 sm:px-3 flex flex-col">
             <Link
               href="/"
               aria-label="Our product"
@@ -179,8 +179,8 @@ const Navbar = () => {
               About us
             </Link>
           </div>
-          <div className="pb-3">
-            <div className="flex items-center px-5">
+          <div className="my-6">
+            <div className="flex items-center px-3">
               <Link href="/" className="" aria-label="Connect wallet" title="Connect wallet">
                 <button className="inline-flex items-center justify-center h-12 px-6 font-medium tracking-wide text-[#4CAF50] transition duration-200 rounded shadow-md bg-[#fff] focus:outline-none capitalize">Connect wallet</button>
               </Link>
