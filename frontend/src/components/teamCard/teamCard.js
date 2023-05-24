@@ -12,7 +12,6 @@ const TeamCard = ({ member }) => {
             try {
                 const { data } = await axios(GITHUB_APIURL + username);
                 setTeam(data);
-                console.log(data);
             } catch (error) {
                 console.log(error);
             }

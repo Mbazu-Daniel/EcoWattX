@@ -5,7 +5,7 @@ const Footer = () => {
   return (
     <div className='bg-[#F6FFF7]'>
         <div className="w-11/12 lg:w-10/12 mx-auto pt-20 pb-20" id="contact">
-            <div className="flex sm:flex-col md:flex-row gap-10">
+            <div className="flex sm:flex-col lg:flex-row gap-10">
                 <div className="lg:mb-0 w-full lg:w-[30%] space-y-6">
                     <div className="flex gap-3">
                         <Image src="/logo.svg" width={70} height={70} alt="logo" />
