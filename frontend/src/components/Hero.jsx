@@ -55,7 +55,7 @@ const Hero = () => {
                       href="#!"
                       target="_blank"
                       rel="noreferrer"
-                      className="flex-1 bg-[transparent] border-2 border-[#EAEAEA] dark:border-[#99999966] text-black dark:text-white py-3 px-5 rounded transition-all"
+                      className="flex-1 bg-[transparent] font-space-grotesk border-2 border-[#EAEAEA] dark:border-[#99999966] text-white dark:text-white py-3 px-5 rounded transition-all"
                     >
                       Staking
                     </a>
@@ -64,7 +64,7 @@ const Hero = () => {
                       href="#!"
                       target="_blank"
                       rel="noreferrer"
-                      className="flex-1 bg-[#51A64C] text-white py-3 px-5 rounded transition-all"
+                      className="flex-1 bg-[#51A64C] text-white py-3 font-space-grotesk px-5 rounded transition-all"
                     >
                       Get started
                     </a>
