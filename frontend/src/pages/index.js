@@ -5,6 +5,7 @@ import About from "@/components/About";
 import WhyUs from "@/components/WhyUs";
 import Merchants from "@/components/Merchants";
 import Footer from "@/components/Footer";
+import TeamContainer from "@/components/teamCard";
 
 export default function Home() {
   return (
@@ -13,6 +14,7 @@ export default function Home() {
       <Hero />
       <About />
       <WhyUs />
+      <TeamContainer />
       <Merchants />
       <Footer />
     </>

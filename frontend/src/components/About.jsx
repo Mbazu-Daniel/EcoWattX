@@ -3,7 +3,7 @@ import React from 'react';
 const About = () => {
   return (
     <div className='overflow-x-hidden'>
-        <h3 className="text-center mb-10 text-4xl mt-24 font-bold">About us</h3>
+        <h3 className="text-center mb-10 text-4xl mt-24 font-medium">About us</h3>
 
         <div className="bg-[#F5FFF6]">
             <div className="w-10/12 mx-auto pt-20 pb-32" id="about">
