@@ -12,9 +12,11 @@
     "eslint": "8.39.0",
     "eslint-config-next": "13.3.1",
     "ethers": "5",
+    "google-fonts-plugin": "^5.0.2",
     "next": "^13.3.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.11.2"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.14",
