@@ -7,6 +7,10 @@ module.exports = {
   ],
   theme: {
     extend: {
+      colors: {
+        BubbleBackground: 'rgba(255, 255, 255, 0.85)',
+        BoxShadow: '0px 5px 36px rgba(0, 0, 0, 0.12)',
+      },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':
