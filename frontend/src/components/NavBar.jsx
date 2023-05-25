@@ -1,10 +1,20 @@
 import React, { useState } from 'react';
+import CustomButton from './common/button.js';
+import UAuth from '@uauth/js'
 import Link from 'next/link';
 import logo from '../../public/logo.svg';
 import Image from 'next/image';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const uauth = new UAuth(
+    {
+      clientID: "a296cd8b-f405-4108-8fb0-45267f5f7e8d",
+      redirectUri: "http://localhost:3000",
+      scope: "openid wallet email profile:optional social:optional"
+    }
+  )
 
   const handleMenuToggle = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -13,6 +23,11 @@ const Navbar = () => {
   const handleCloseMenu = () => {
     setIsMenuOpen(false);
   };
+
+  const Login = () => {
+    uauth.loginWithPopup().then((authorization) => (console.log(authorization)));
+    console.log('clicked!');
+  }
 
   return (
     <nav className="bg-white">
@@ -78,7 +93,14 @@ const Navbar = () => {
             </div>
             <div className="hidden md:block ml-8">
               <Link href="/" className="" aria-label="Connect wallet" title="Connect wallet">
-                <button className="inline-flex items-center justify-center h-12 px-6 font-medium tracking-wide text-white transition duration-200 rounded shadow-md bg-[#4CAF50] md:text-sm lg:text-[1rem] focus:outline-none capitalize">Connect wallet</button>
+                <CustomButton
+                  padding="0rem 1.7rem"
+                  backgroundColor="#4CAF50"
+                  textColor="#FFF"
+                  onClick={Login}
+                >
+                  Connect wallet
+                </CustomButton>
               </Link>
             </div>
             <div className="md:hidden grid place-items-center">
@@ -145,7 +167,7 @@ const Navbar = () => {
               </svg>
             </button>
           </div>
-          <div className="px-5 pt-2 pb-3 space-y-1 sm:px-3 flex flex-col">
+          <div className="px-5 pt-2 pb-3 space-y-4 sm:px-3 flex flex-col">
             <Link
               href="/"
               aria-label="Our product"
@@ -182,7 +204,14 @@ const Navbar = () => {
           <div className="my-6">
             <div className="flex items-center px-3">
               <Link href="/" className="" aria-label="Connect wallet" title="Connect wallet">
-                <button className="inline-flex items-center justify-center h-12 px-6 font-medium tracking-wide text-[#4CAF50] transition duration-200 rounded shadow-md bg-[#fff] focus:outline-none capitalize">Connect wallet</button>
+                <CustomButton
+                  padding="0rem 1.7rem"
+                  backgroundColor="#FFF"
+                  textColor="#4CAF50"
+                  onClick={Login}
+                >
+                  Connect wallet
+                </CustomButton>
               </Link>
             </div>
           </div>
