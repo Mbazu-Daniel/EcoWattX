@@ -6,6 +6,7 @@ import Merchants from "@/components/Merchants";
 import Footer from "@/components/Footer";
 import TeamContainer from "@/components/teamCard";
 import FAQ from "@/components/faq";
+import { Toaster, toast } from 'react-hot-toast';
 
 export default function Home() {
   return (
@@ -18,6 +19,7 @@ export default function Home() {
       <Merchants />
       <FAQ />
       <Footer />
+      <Toaster />
     </>
   );
 }

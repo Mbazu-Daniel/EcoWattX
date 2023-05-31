@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { toast } from 'react-hot-toast';
+import { useRouter } from 'next/router.js';
 import CustomButton from './common/button.js';
 import UAuth from '@uauth/js'
 import Link from 'next/link';
@@ -7,14 +9,13 @@ import Image from 'next/image';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const uauth = new UAuth(
-    {
-      clientID: "a296cd8b-f405-4108-8fb0-45267f5f7e8d",
-      redirectUri: "https://ecowattx.vercel.app/connected",
-      scope: "openid wallet email profile social:optional"
-    }
-  )
+  const uauth = new UAuth({
+    clientID: "a296cd8b-f405-4108-8fb0-45267f5f7e8d",
+    redirectUri: "https://ecowattx.vercel.app/connected",
+    scope: "openid wallet email profile social:optional"
+  });
 
   const handleMenuToggle = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -24,22 +25,25 @@ const Navbar = () => {
     setIsMenuOpen(false);
   };
 
-  const Login = () => {
-    uauth.loginWithPopup()
+  const handleLogin = () => {
+    setLoading(true);
+    uauth
+      .loginWithPopup()
       .then((authorization) => {
         console.log(authorization);
+        router.push('/connected')
       })
       .catch((error) => {
-        if (error.name === "PopupClosedError") {
-          // Handle the popup closed error
-          console.log("Popup was closed");
+        if (error.name === 'PopupClosedError') {
+          console.log('Popup was closed');
+          toast.error('Authentication not successful.');
         } else {
-          // Handle other errors
-          console.log("An error occurred:", error);
+          console.log('An error occurred:', error);
         }
+      })
+      .finally(() => {
+        setLoading(false);
       });
-  
-    console.log("clicked!");
   };
 
   return (
@@ -105,16 +109,15 @@ const Navbar = () => {
               </div>
             </div>
             <div className="hidden md:block ml-8">
-              <Link href="/connected" className="" aria-label="Connect wallet" title="Connect wallet">
-                <CustomButton
+              <CustomButton
                   padding="0rem 1.7rem"
                   backgroundColor="#4CAF50"
                   textColor="#FFF"
-                  onClick={Login}
+                  onClick={handleLogin}
+                  disabled={loading}
                 >
-                  Connect wallet
+                  {loading ? 'Authenticating...' : 'Connect wallet'}
                 </CustomButton>
-              </Link>
             </div>
             <div className="md:hidden grid place-items-center">
               <button
@@ -221,7 +224,7 @@ const Navbar = () => {
                   padding="0rem 1.7rem"
                   backgroundColor="#FFF"
                   textColor="#4CAF50"
-                  onClick={Login}
+                  onClick={handleLogin}
                 >
                   Connect wallet
                 </CustomButton>

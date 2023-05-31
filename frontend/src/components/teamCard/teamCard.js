@@ -1,5 +1,5 @@
+ /* eslint-disable @next/next/no-img-element */
 import { useState, useEffect } from 'react';
-import Image from 'next/legacy/image';
 import axios from 'axios';
 
 const TeamCard = ({ member }) => {
@@ -34,15 +34,12 @@ const TeamCard = ({ member }) => {
                 rel='noreferrer'
                 className='grid place-items-center'>
                 <div className='w-[200px] rounded-[50%]'>
-                    <Image 
-                        src={avatar_url || ''}
+                    <img 
+                        src={avatar_url}
                         alt={name}
                         width={100}
                         height={100}
-                        layout="responsive"
-                        objectFit="cover"
-                        objectPosition="center"
-                        className="rounded-full"
+                        className="rounded-full object-cover object-center"
                     />
                 </div>
             </a>
