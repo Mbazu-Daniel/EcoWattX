@@ -105,7 +105,7 @@ const Navbar = () => {
               </div>
             </div>
             <div className="hidden md:block ml-8">
-              <Link href="/" className="" aria-label="Connect wallet" title="Connect wallet">
+              <Link href="/connected" className="" aria-label="Connect wallet" title="Connect wallet">
                 <CustomButton
                   padding="0rem 1.7rem"
                   backgroundColor="#4CAF50"
@@ -216,7 +216,7 @@ const Navbar = () => {
           </div>
           <div className="my-6">
             <div className="flex items-center px-3">
-              <Link href="/" className="" aria-label="Connect wallet" title="Connect wallet">
+              <Link href="/connected" className="" aria-label="Connect wallet" title="Connect wallet">
                 <CustomButton
                   padding="0rem 1.7rem"
                   backgroundColor="#FFF"
