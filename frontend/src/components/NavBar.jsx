@@ -11,7 +11,7 @@ const Navbar = () => {
   const uauth = new UAuth(
     {
       clientID: "a296cd8b-f405-4108-8fb0-45267f5f7e8d",
-      redirectUri: "http://localhost:3000",
+      redirectUri: "https://ecowattx.vercel.app/connected",
       scope: "openid wallet email profile social:optional"
     }
   )
@@ -25,9 +25,22 @@ const Navbar = () => {
   };
 
   const Login = () => {
-    uauth.loginWithPopup().then((authorization) => (console.log(authorization)));
-    console.log('clicked!');
-  }
+    uauth.loginWithPopup()
+      .then((authorization) => {
+        console.log(authorization);
+      })
+      .catch((error) => {
+        if (error.name === "PopupClosedError") {
+          // Handle the popup closed error
+          console.log("Popup was closed");
+        } else {
+          // Handle other errors
+          console.log("An error occurred:", error);
+        }
+      });
+  
+    console.log("clicked!");
+  };
 
   return (
     <nav className="bg-white">
