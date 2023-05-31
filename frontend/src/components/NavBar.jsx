@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/router.js';
 import CustomButton from './common/button.js';
@@ -8,13 +8,15 @@ import logo from '../../public/logo.svg';
 import Image from 'next/image';
 
 const Navbar = () => {
+  const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const uauth = new UAuth({
     clientID: "a296cd8b-f405-4108-8fb0-45267f5f7e8d",
     redirectUri: "https://ecowattx.vercel.app/connected",
-    scope: "openid wallet email profile social:optional"
+    scope: "openid wallet email profile:optional social:optional"
   });
 
   const handleMenuToggle = () => {
@@ -28,24 +30,20 @@ const Navbar = () => {
   const handleLogin = () => {
     setLoading(true);
     uauth
-      .loginWithPopup()
+      .login()
       .then((authorization) => {
         console.log(authorization);
-        router.push('/connected')
+        setIsAuthenticated(true); // Set authentication status to true
       })
       .catch((error) => {
-        if (error.name === 'PopupClosedError') {
-          console.log('Popup was closed');
-          toast.error('Authentication not successful.');
-        } else {
-          console.log('An error occurred:', error);
-        }
+        console.error('login error:', error);
+        toast.error('Authentication not successful.');
       })
       .finally(() => {
         setLoading(false);
       });
   };
-
+  
   return (
     <nav className="bg-white">
       <div className="w-full flex items-center justify-center py-4 mt-2">
@@ -109,7 +107,18 @@ const Navbar = () => {
               </div>
             </div>
             <div className="hidden md:block ml-8">
-              <CustomButton
+              {isAuthenticated ? (
+                <Link href="/connected" passHref>
+                  <CustomButton
+                    padding="0rem 1.7rem"
+                    backgroundColor="#4CAF50"
+                    textColor="#FFF"
+                  >
+                    Please wait...
+                  </CustomButton>
+                </Link>
+              ) : (
+                <CustomButton
                   padding="0rem 1.7rem"
                   backgroundColor="#4CAF50"
                   textColor="#FFF"
@@ -118,6 +127,7 @@ const Navbar = () => {
                 >
                   {loading ? 'Authenticating...' : 'Connect wallet'}
                 </CustomButton>
+              )}
             </div>
             <div className="md:hidden grid place-items-center">
               <button
@@ -219,16 +229,28 @@ const Navbar = () => {
           </div>
           <div className="my-6">
             <div className="flex items-center px-3">
-              <Link href="/connected" className="" aria-label="Connect wallet" title="Connect wallet">
+            {isAuthenticated ? (
+                <Link href="/connected" passHref>
+                  <CustomButton
+                    padding="0rem 1.7rem"
+                    backgroundColor="#FFF"
+                    textColor="#4CAF50"
+                    disabled
+                  >
+                    Please wait...
+                  </CustomButton>
+                </Link>
+              ) : (
                 <CustomButton
                   padding="0rem 1.7rem"
                   backgroundColor="#FFF"
                   textColor="#4CAF50"
                   onClick={handleLogin}
+                  disabled={loading}
                 >
-                  Connect wallet
+                  {loading ? 'Authenticating...' : 'Connect wallet'}
                 </CustomButton>
-              </Link>
+              )}
             </div>
           </div>
           
