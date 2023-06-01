@@ -1,22 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { toast } from 'react-hot-toast';
-import { useRouter } from 'next/router.js';
 import CustomButton from './common/button.js';
 import UAuth from '@uauth/js'
 import Link from 'next/link';
 import logo from '../../public/logo.svg';
 import Image from 'next/image';
+import { AppContext } from './context/AppContext';
+import Profile from './common/profile.js';
 
 const Navbar = () => {
-  const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { collectedData, setCollectedData } = useContext(AppContext);
 
   const uauth = new UAuth({
     clientID: "a296cd8b-f405-4108-8fb0-45267f5f7e8d",
-    redirectUri: "https://ecowattx.vercel.app/connected",
-    scope: "openid wallet email profile social:optional"
+    redirectUri: "http://localhost:3000",
+    scope: "openid wallet email profile:optional social:optional"
   });
 
   const handleMenuToggle = () => {
@@ -32,8 +32,14 @@ const Navbar = () => {
     uauth
       .loginWithPopup()
       .then((authorization) => {
-        console.log(authorization);
-        setIsAuthenticated(true); // Set authentication status to true
+        const walletAddress = authorization['idToken']['wallet_address'];
+        const profilePicture = authorization['idToken']['picture'];
+        setCollectedData({
+          ...authorization,
+          isAuthenticated: true,
+          walletAddress: walletAddress,
+          profilePicture: profilePicture,
+        });
       })
       .catch((error) => {
         console.error('login error:', error);
@@ -107,16 +113,8 @@ const Navbar = () => {
               </div>
             </div>
             <div className="hidden md:block ml-8">
-              {isAuthenticated ? (
-                <Link href="/connected" passHref>
-                  <CustomButton
-                    padding="0rem 1.7rem"
-                    backgroundColor="#4CAF50"
-                    textColor="#FFF"
-                  >
-                    Connected
-                  </CustomButton>
-                </Link>
+              {collectedData && collectedData.isAuthenticated ? (
+                <Profile collectedData={collectedData} />
               ) : (
                 <CustomButton
                   padding="0rem 1.7rem"
@@ -229,17 +227,8 @@ const Navbar = () => {
           </div>
           <div className="my-6">
             <div className="flex items-center px-3">
-            {isAuthenticated ? (
-                <Link href="/connected" passHref>
-                  <CustomButton
-                    padding="0rem 1.7rem"
-                    backgroundColor="#FFF"
-                    textColor="#4CAF50"
-                    disabled
-                  >
-                    Connected
-                  </CustomButton>
-                </Link>
+            {collectedData && collectedData.isAuthenticated ? (
+                <Profile collectedData={collectedData} />
               ) : (
                 <CustomButton
                   padding="0rem 1.7rem"
