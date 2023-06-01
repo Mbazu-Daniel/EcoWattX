@@ -15,8 +15,8 @@ const Navbar = () => {
 
   const uauth = new UAuth({
     clientID: "a296cd8b-f405-4108-8fb0-45267f5f7e8d",
-    redirectUri: "http://localhost:3000/connected",
-    scope: "openid wallet email profile:optional social:optional"
+    redirectUri: "https://ecowattx.vercel.app/connected",
+    scope: "openid wallet email profile social:optional"
   });
 
   const handleMenuToggle = () => {
