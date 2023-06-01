@@ -15,7 +15,7 @@ const Navbar = () => {
 
   const uauth = new UAuth({
     clientID: "a296cd8b-f405-4108-8fb0-45267f5f7e8d",
-    redirectUri: "https://ecowattx.vercel.app/connected",
+    redirectUri: "http://localhost:3000/connected",
     scope: "openid wallet email profile:optional social:optional"
   });
 
@@ -30,7 +30,7 @@ const Navbar = () => {
   const handleLogin = () => {
     setLoading(true);
     uauth
-      .login()
+      .loginWithPopup()
       .then((authorization) => {
         console.log(authorization);
         setIsAuthenticated(true); // Set authentication status to true
@@ -114,7 +114,7 @@ const Navbar = () => {
                     backgroundColor="#4CAF50"
                     textColor="#FFF"
                   >
-                    Please wait...
+                    Connected
                   </CustomButton>
                 </Link>
               ) : (
@@ -237,7 +237,7 @@ const Navbar = () => {
                     textColor="#4CAF50"
                     disabled
                   >
-                    Please wait...
+                    Connected
                   </CustomButton>
                 </Link>
               ) : (
